@@ -2,7 +2,9 @@ package edu.iis.mto.testreactor.exc2;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -42,9 +44,33 @@ public class WashingMachineTest {
     }
 
     @Test
-    public void shouldReturnResultFailureIfWashingMachineOverweighted() {
+    public void shouldReturnResultFailureIfWashingMachineIsOverweighted() {
         LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
         assertThat(laundryStatus.getResult(), equalTo(Result.FAILURE));
+    }
+
+    @Test
+    public void shouldReturnResultSuccesIfWashingMachineIsNotOverweighted() {
+        laundryBatch = LaundryBatch.builder()
+                                   .withType(Material.COTTON)
+                                   .withWeightKg(7)
+                                   .build();
+        Percentage percentage = new Percentage(20);
+        when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        assertThat(laundryStatus.getResult(), equalTo(Result.SUCCESS));
+    }
+
+    @Test
+    public void shouldBeRunnedLongProgramIfPercetageofDirtWasHigherThenAverage() {
+        laundryBatch = LaundryBatch.builder()
+                                   .withType(Material.COTTON)
+                                   .withWeightKg(7)
+                                   .build();
+        Percentage percentage = new Percentage(50);
+        when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        assertThat(laundryStatus.getRunnedProgram(), equalTo(Program.LONG));
     }
 
     @Test
