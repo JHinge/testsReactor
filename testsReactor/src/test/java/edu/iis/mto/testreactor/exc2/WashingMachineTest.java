@@ -14,7 +14,6 @@ import org.junit.Test;
 
 public class WashingMachineTest {
 
-    private Program program;
     private WashingMachine washingMachine;
     private DirtDetector dirtDetector;
     private Engine engine;
@@ -53,6 +52,16 @@ public class WashingMachineTest {
                                         .build();
         LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
         assertThat(laundryStatus.getResult(), equalTo(Result.FAILURE));
+    }
+
+    @Test
+    public void shouldReturnErrorCodeTooHeavyIfWashingMachineIsOverweighted() {
+        this.laundryBatch = LaundryBatch.builder()
+                                        .withType(Material.DELICATE)
+                                        .withWeightKg(40)
+                                        .build();
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        assertThat(laundryStatus.getErrorCode(), equalTo(ErrorCode.TOO_HEAVY));
     }
 
     @Test
