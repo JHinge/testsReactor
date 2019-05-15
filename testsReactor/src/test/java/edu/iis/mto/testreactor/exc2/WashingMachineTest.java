@@ -8,7 +8,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -106,8 +105,13 @@ public class WashingMachineTest {
     }
 
     @Test
-    public void itCompiles() {
-        assertThat(true, Matchers.equalTo(true));
+    public void washingShouldBeRunForTimeSpecifiedByProgram() {
+        programConfiguration = ProgramConfiguration.builder()
+                                                   .withProgram(Program.SHORT)
+                                                   .build();
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        verify(engine, times(1)).runWashing(programConfiguration.getProgram()
+                                                                .getTimeInMinutes());
     }
 
 }
