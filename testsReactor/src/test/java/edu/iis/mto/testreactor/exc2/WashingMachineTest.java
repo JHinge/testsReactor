@@ -65,11 +65,19 @@ public class WashingMachineTest {
     }
 
     @Test
-    public void shouldBeRunnedLongProgramIfPercetageofDirtWasHigherThenAverage() {
+    public void shouldBeRunnedLongProgramIfPercetageofDirtWasHigherThanAverage() {
         Percentage percentage = new Percentage(50);
         when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
         LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
         assertThat(laundryStatus.getRunnedProgram(), equalTo(Program.LONG));
+    }
+
+    @Test
+    public void shouldBeRunnedMediumProgramIfPercetageofDirtWasSmallerThanAverage() {
+        Percentage percentage = new Percentage(20);
+        when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        assertThat(laundryStatus.getRunnedProgram(), equalTo(Program.MEDIUM));
     }
 
     @Test
