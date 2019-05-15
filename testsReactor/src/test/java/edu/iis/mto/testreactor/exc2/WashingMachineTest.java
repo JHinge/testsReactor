@@ -25,6 +25,11 @@ public class WashingMachineTest {
 
     }
 
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIdDirtDerectorIsNull() {
+        new WashingMachine(null, engine, waterPump);
+    }
+
     @Test
     public void itCompiles() {
         assertThat(true, Matchers.equalTo(true));
