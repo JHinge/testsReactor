@@ -114,4 +114,14 @@ public class WashingMachineTest {
                                                                 .getTimeInMinutes());
     }
 
+    @Test
+    public void shouldNotSpinIfProgramConfiguartionDoNotHaveIt() {
+        programConfiguration = ProgramConfiguration.builder()
+                                                   .withProgram(Program.MEDIUM)
+                                                   .withSpin(false)
+                                                   .build();
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        verify(engine, times(0)).spin();
+    }
+
 }
