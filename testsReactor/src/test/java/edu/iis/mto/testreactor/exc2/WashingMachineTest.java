@@ -66,7 +66,6 @@ public class WashingMachineTest {
 
     @Test
     public void shouldBeRunnedLongProgramIfPercetageofDirtWasHigherThenAverage() {
-
         Percentage percentage = new Percentage(50);
         when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
         LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
@@ -79,6 +78,14 @@ public class WashingMachineTest {
         when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
         LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
         verify(engine, times(1)).spin();
+    }
+
+    @Test
+    public void shoulCallPourMethodOnceDuringLoundryProcess() {
+        Percentage percentage = new Percentage(10);
+        when(dirtDetector.detectDirtDegree(any(LaundryBatch.class))).thenReturn(percentage);
+        LaundryStatus laundryStatus = washingMachine.start(laundryBatch, programConfiguration);
+        verify(waterPump, times(1)).pour(laundryBatch.getWeightKg());
     }
 
     @Test
